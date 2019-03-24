@@ -23,27 +23,47 @@ class _HomeScreenState extends State<HomeScreen> {
     List<Movie> _movies = [];
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: _appBarTitle,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () async {
-              var result = await showSearch(
-                  context: context, delegate: MovieSearch(null));
-            },
-          )
-        ],
-      ),
-      body: StreamBuilder<UnmodifiableListView<Movie>>(
-        stream: widget.bloc.movies,
-        initialData: UnmodifiableListView<Movie>([]),
-        builder: ((context, snapshot) => ListView(
-              children: snapshot.data.map(_buildItem).toList(),
-            )),
-      ),
-    );
+        appBar: AppBar(
+          centerTitle: true,
+          title: _appBarTitle,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () async {
+                var result = await showSearch(
+                    context: context, delegate: MovieSearch(null));
+              },
+            )
+          ],
+        ),
+        body: StreamBuilder<UnmodifiableListView<Movie>>(
+          stream: widget.bloc.movies,
+          initialData: UnmodifiableListView<Movie>([]),
+          builder: ((context, snapshot) => ListView(
+                children: snapshot.data.map(_buildItem).toList(),
+              )),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+                title: Text(
+                  'Populares',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                icon: IconTheme(
+                    data: IconThemeData(color: Colors.grey[700]),
+                    child: Icon(Icons.new_releases))),
+            BottomNavigationBarItem(
+                title: Text('Otros'), icon: Icon(Icons.movie))
+          ],
+          onTap: (index) {
+            if (index == 0) {
+              print('populares');
+            } else {
+              print('otros');
+            }
+          },
+        ));
   }
 
   Widget _buildItem(Movie movie) {
