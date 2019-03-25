@@ -37,11 +37,6 @@ dependencies:
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
-  build_runner: ^1.0.0
-  built_value_generator:
-    git:
-      url: https://github.com/efortuna/built_value.dart.git/
-      path: built_value_generator
   flutter_test:
     sdk: flutter
 
