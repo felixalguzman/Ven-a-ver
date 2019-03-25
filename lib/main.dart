@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       home: HomeScreen(
         bloc: bloc,
       ),
-      theme: ThemeData(primaryColor: Colors.blue),
+      theme: ThemeData(primaryColor: Colors.indigo[800]),
     );
   }
 }
