@@ -18,7 +18,7 @@ class MovieSearch extends SearchDelegate<Movie> {
             query = '';
           })
     ];
-    ;
+
   }
 
   @override
@@ -30,7 +30,7 @@ class MovieSearch extends SearchDelegate<Movie> {
         close(context, null);
       },
     );
-    ;
+
   }
 
   @override

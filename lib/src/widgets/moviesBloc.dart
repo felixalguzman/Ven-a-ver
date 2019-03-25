@@ -68,7 +68,7 @@ class MoviesBloc {
 
   Future<Movie> _getMovie(int id) async {
     final movieUrl =
-        'https://api.themoviedb.org/3/movie/${id}?api_key=${TMDBConfig.apiKey}';
+        'https://api.themoviedb.org/3/movie/$id?api_key=${TMDBConfig.apiKey}';
     final movieRes = await http.get(movieUrl);
 
     if (movieRes.statusCode == 200) {
