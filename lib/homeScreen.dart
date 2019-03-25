@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:ven_a_ver/src/movie.dart';
 import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
+import 'package:ven_a_ver/src/widgets/search.dart';
 import 'package:ven_a_ver/tmdb_config.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Widget _appBarTitle = new Text('Ven a ver');
+  int _currentIndex = 0;
 
   Widget build(BuildContext context) {
     List<Movie> _movies = [];
@@ -44,24 +46,26 @@ class _HomeScreenState extends State<HomeScreen> {
               )),
         ),
         bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
           items: [
             BottomNavigationBarItem(
                 title: Text(
                   'Populares',
-                  style: TextStyle(color: Colors.grey),
                 ),
-                icon: IconTheme(
-                    data: IconThemeData(color: Colors.grey[700]),
-                    child: Icon(Icons.new_releases))),
+                icon: Icon(Icons.new_releases)),
             BottomNavigationBarItem(
                 title: Text('Otros'), icon: Icon(Icons.movie))
           ],
           onTap: (index) {
             if (index == 0) {
-              print('populares');
+              widget.bloc.moviesType.add(TipoPelicula.estreno);
             } else {
-              print('otros');
+              widget.bloc.moviesType.add(TipoPelicula.favoritos);
             }
+
+            setState(() {
+              _currentIndex = index;
+            });
           },
         ));
   }
@@ -73,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            Image.network(movie.posterImageUrl),
             ListTile(
               title: Text(movie.title ?? 'no tiene'),
               subtitle: Text(movie.overview),
@@ -81,58 +86,5 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
-  }
-}
-
-Future<Movie> _searchByName(String text) async {
-  // ignore: unnecessary_brace_in_string_interps
-  final movieUrl =
-      'https://api.themoviedb.org/3/movie?/search?query=${text}?api_key=${TMDBConfig.apiKey}';
-  final movieRes = await http.get(movieUrl);
-
-  if (movieRes.statusCode == 200) {
-    return parseMovie(movieRes.body);
-  }
-}
-
-class MovieSearch extends SearchDelegate<Movie> {
-  final UnmodifiableListView<Movie> movies;
-
-  MovieSearch(this.movies);
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    // TODO: implement buildActions
-    return [
-      IconButton(
-          icon: Icon(Icons.clear),
-          onPressed: () {
-            query = '';
-          })
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
-    return IconButton(
-      icon: Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-
-    return Text(query);
   }
 }

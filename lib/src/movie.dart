@@ -1,63 +1,52 @@
 import 'dart:convert' as json;
 
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
+import 'dart:convert';
 
-import 'package:built_value/serializer.dart';
-import 'serializers.dart';
-import 'dart:convert' as json;
+class Movie {
+  int id;
 
-part 'movie.g.dart';
-
-abstract class Movie implements Built<Movie, MovieBuilder> {
-  static Serializer<Movie> get serializer => _$movieSerializer;
-
-  int get id;
-
-  @nullable
-  String get title;
+  String title;
 
 //  BuiltList<String> get genres;
 
-  String get overview;
+  String overview;
 
-  int get runtime;
+  int runtime;
 
-  String get status;
+  String status;
 
-  String get tagline;
+  String tagline;
 
-  String get poster_path;
+  String posterImageUrl;
 
-  @nullable
-  bool get favorite;
+  bool favorite;
 
-  Movie._();
-
-  factory Movie([updates(MovieBuilder b)]) = _$Movie;
+  Movie.fromJson(Map<String, dynamic> json)
+      : title = json['title'],
+        overview = json['overview'],
+        runtime = json['runtime'],
+        status = json['status'],
+        tagline = json['tagLine'],
+        posterImageUrl =
+            'http://image.tmdb.org/t/p/w400/' + json['poster_path'];
 }
 
-List<int> parseRecentMovies(String jsonStr) {
-  return List<int>();
-//  final parsed = json.jsonDecode(jsonStr);
-//  final listOfIds = List<int>.from(parsed);
-//
-//  return listOfIds;
-}
-
-Movie parseMovie(String jsonStr) {
-  final parsed = json.jsonDecode(jsonStr);
-  Movie movie = standartSerializers.deserializeWith(Movie.serializer, parsed);
-  return movie;
-}
-
-List<Movie> parseMovies(List<String> jsonStr) {
+List<Movie> parseMovies(String jsonStr) {
   List<Movie> movies = [];
-  for (var i = 0; i < jsonStr.length; i++) {
-    final parsed = json.jsonDecode(jsonStr[i]);
+  var array = jsonDecode(jsonStr);
 
-    movies.add(standartSerializers.deserializeWith(Movie.serializer, parsed));
+  List resultados = array['results'];
+
+  for (var i = 0; i < resultados.length; i++) {
+    print('mov: ${resultados[i]}');
+
+    movies.add(Movie.fromJson(resultados[i]));
   }
+
+//  print(resultados[0]['adult'] + ' len ${resultados.length}' );
+
+  print(movies);
+//  movies.insertAll(0, List<Movie>.from(array['results'][1]));
 
   return movies;
 }
