@@ -1,5 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:ven_a_ver/src/genres.dart';
 import 'package:ven_a_ver/src/movie.dart';
 import 'package:ven_a_ver/src/ui/separator.dart';
 import 'package:ven_a_ver/src/ui/text_style.dart';

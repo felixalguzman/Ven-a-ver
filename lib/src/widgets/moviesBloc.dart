@@ -66,6 +66,12 @@ class MoviesBloc {
     _movies = futureMovies;
   }
 
+  void close(){
+    _moviesSubject.close();
+    _isLoadingSubject.close();
+    _movieTypeController.close();
+  }
+
   Future<Movie> _getMovie(int id) async {
     final movieUrl =
         'https://api.themoviedb.org/3/movie/$id?api_key=${TMDBConfig.apiKey}';

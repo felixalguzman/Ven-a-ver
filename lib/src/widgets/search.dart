@@ -2,6 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:ven_a_ver/src/movie.dart';
+import 'package:ven_a_ver/src/ui/movie_card.dart';
+import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
 
 class MovieSearch extends SearchDelegate<Movie> {
   final Stream<UnmodifiableListView<Movie>> movies;
@@ -18,7 +20,6 @@ class MovieSearch extends SearchDelegate<Movie> {
             query = '';
           })
     ];
-
   }
 
   @override
@@ -30,19 +31,80 @@ class MovieSearch extends SearchDelegate<Movie> {
         close(context, null);
       },
     );
-
   }
 
   @override
   Widget buildResults(BuildContext context) {
     // TODO: implement buildResults
-    return Container();
+    return StreamBuilder<UnmodifiableListView<Movie>>(
+      stream: movies,
+      builder: (context, AsyncSnapshot<UnmodifiableListView<Movie>> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+              child: Text(
+            'No data!',
+          ));
+        }
+
+        var results = snapshot.data
+            .where((a) => a.title.toLowerCase().contains(query.toLowerCase()));
+
+        return ListView(
+          children: results
+              .map<ListTile>((a) => ListTile(
+                    title: Text(a.title,
+                        style: Theme.of(context)
+                            .textTheme
+                            .subhead
+                            .copyWith(fontSize: 16.0)),
+                    leading: Icon(Icons.book),
+                    onTap: () {
+                      final snackBar = SnackBar(
+                        content: Text(a.title),
+                      );
+
+                      Scaffold.of(context).showSnackBar(snackBar);
+
+//                      close(context, a);
+                    },
+                  ))
+              .toList(),
+        );
+      },
+    );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     // TODO: implement buildSuggestions
-    return Text(query);
+    return StreamBuilder<UnmodifiableListView<Movie>>(
+      stream: movies,
+      builder: (context, AsyncSnapshot<UnmodifiableListView<Movie>> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+              child: Text(
+            'No data!',
+          ));
+        }
 
+        final results = snapshot.data
+            .where((a) => a.title.toLowerCase().contains(query.toLowerCase()));
+
+        return ListView(
+          children: results
+              .map<ListTile>((a) => ListTile(
+                    title: Text(a.title,
+                        style: Theme.of(context).textTheme.subhead.copyWith(
+                              fontSize: 16.0,
+                              color: Colors.blue,
+                            )),
+                    onTap: () {
+                      close(context, a);
+                    },
+                  ))
+              .toList(),
+        );
+      },
+    );
   }
 }

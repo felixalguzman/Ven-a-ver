@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Icon(Icons.search),
               onPressed: () async {
                 var result = await showSearch(
-                    context: context, delegate: MovieSearch(null));
+                    context: context, delegate: MovieSearch(widget.bloc.movies));
               },
             )
           ],
