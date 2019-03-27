@@ -50,25 +50,7 @@ class MovieSearch extends SearchDelegate<Movie> {
             .where((a) => a.title.toLowerCase().contains(query.toLowerCase()));
 
         return ListView(
-          children: results
-              .map<ListTile>((a) => ListTile(
-                    title: Text(a.title,
-                        style: Theme.of(context)
-                            .textTheme
-                            .subhead
-                            .copyWith(fontSize: 16.0)),
-                    leading: Icon(Icons.book),
-                    onTap: () {
-                      final snackBar = SnackBar(
-                        content: Text(a.title),
-                      );
-
-                      Scaffold.of(context).showSnackBar(snackBar);
-
-//                      close(context, a);
-                    },
-                  ))
-              .toList(),
+          children: results.map(card).toList(),
         );
       },
     );
@@ -96,7 +78,7 @@ class MovieSearch extends SearchDelegate<Movie> {
                     title: Text(a.title,
                         style: Theme.of(context).textTheme.subhead.copyWith(
                               fontSize: 16.0,
-                              color: Colors.blue,
+                              color: Colors.black,
                             )),
                     onTap: () {
                       close(context, a);
