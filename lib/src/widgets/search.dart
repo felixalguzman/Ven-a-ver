@@ -45,8 +45,9 @@ class MovieSearch extends SearchDelegate<Movie> {
           ));
         }
 
-        var results = snapshot.data
-            .where((a) => a.title.toLowerCase().contains(query.toLowerCase()));
+        var results = snapshot.data.where((a) =>
+            a.title.toLowerCase().contains(query.toLowerCase()) ||
+            a.overview.toLowerCase().contains(query.toLowerCase()));
 
         return ListView(
           children: results.map(card).toList(),
@@ -61,29 +62,19 @@ class MovieSearch extends SearchDelegate<Movie> {
     return StreamBuilder<UnmodifiableListView<Movie>>(
       stream: movies,
       builder: (context, AsyncSnapshot<UnmodifiableListView<Movie>> snapshot) {
-        if (!snapshot.hasData) {
+        if (query.isEmpty) {
           return Center(
               child: Text(
-            'No data!',
+            '',
           ));
         }
 
-        final results = snapshot.data
-            .where((a) => a.title.toLowerCase().contains(query.toLowerCase()));
+        final results = snapshot.data.where((a) =>
+            a.title.toLowerCase().contains(query.toLowerCase()) ||
+            a.overview.toLowerCase().contains(query.toLowerCase()));
 
         return ListView(
-          children: results
-              .map<ListTile>((a) => ListTile(
-                    title: Text(a.title,
-                        style: Theme.of(context).textTheme.subhead.copyWith(
-                              fontSize: 16.0,
-                              color: Colors.black,
-                            )),
-                    onTap: () {
-                      close(context, a);
-                    },
-                  ))
-              .toList(),
+          children: results.map(card).toList(),
         );
       },
     );
