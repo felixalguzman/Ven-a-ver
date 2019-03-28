@@ -66,32 +66,43 @@ class MoviesBloc {
     _movies = futureMovies;
   }
 
-  void close(){
+  void close() {
     _moviesSubject.close();
     _isLoadingSubject.close();
     _movieTypeController.close();
   }
 
   Future<Movie> _getMovie(int id) async {
-    final movieUrl =
-        'https://api.themoviedb.org/3/movie/$id?api_key=${TMDBConfig.apiKey}';
-    final movieRes = await http.get(movieUrl);
+    if (!_cachedMovies.containsKey(id)) {
+          _isLoadingSubject.add(true);
 
-    if (movieRes.statusCode == 200) {
-      Map json = jsonDecode(movieRes.body);
-      Movie m = Movie.fromJson(json);
-      return m;
+      final movieUrl =
+          'https://api.themoviedb.org/3/movie/$id?api_key=${TMDBConfig.apiKey}';
+      final movieRes = await http.get(movieUrl);
+
+      if (movieRes.statusCode == 200) {
+        Map json = jsonDecode(movieRes.body);
+        _cachedMovies[id] = Movie.fromJson(json);
+            _isLoadingSubject.add(false);
+
+      } else {
+        throw MovieApiError("Movie $id no se pudo buscar");
+      }
     }
 
-    throw MovieApiError("Movie $id no se pudo buscar");
+    return _cachedMovies[id];
   }
 
   Future<List<Movie>> _getMovies() async {
+        _isLoadingSubject.add(true);
+
     final movieUrl =
         'https://api.themoviedb.org/3/trending/movie/day?api_key=${TMDBConfig.apiKey}';
     final movieRes = await http.get(movieUrl);
 
     if (movieRes.statusCode == 200) {
+          _isLoadingSubject.add(false);
+
       return parseMovies(movieRes.body);
     }
 

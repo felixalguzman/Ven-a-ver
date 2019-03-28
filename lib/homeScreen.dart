@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:ven_a_ver/src/movie.dart';
 import 'package:ven_a_ver/src/ui/movie_card.dart';
+import 'package:ven_a_ver/src/widgets/loading_info.dart';
 import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
 import 'package:ven_a_ver/src/widgets/search.dart';
 
@@ -29,11 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () async {
-                var result = await showSearch(
-                    context: context, delegate: MovieSearch(widget.bloc.movies));
+                showSearch(
+                    context: context,
+                    delegate: MovieSearch(widget.bloc.movies));
               },
             )
           ],
+          leading: LoadingInfo(widget.bloc.isLoading),
         ),
         body: StreamBuilder<UnmodifiableListView<Movie>>(
           stream: widget.bloc.movies,

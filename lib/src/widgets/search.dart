@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:ven_a_ver/src/movie.dart';
 import 'package:ven_a_ver/src/ui/movie_card.dart';
-import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
 
 class MovieSearch extends SearchDelegate<Movie> {
   final Stream<UnmodifiableListView<Movie>> movies;
