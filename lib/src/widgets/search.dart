@@ -50,7 +50,7 @@ class MovieSearch extends SearchDelegate<Movie> {
             a.overview.toLowerCase().contains(query.toLowerCase()));
 
         return ListView(
-          children: results.map(card).toList(),
+          children: results.map((m) => MovieSummary(m)).toList(),
         );
       },
     );
@@ -69,12 +69,13 @@ class MovieSearch extends SearchDelegate<Movie> {
           ));
         }
 
+
         final results = snapshot.data.where((a) =>
             a.title.toLowerCase().contains(query.toLowerCase()) ||
             a.overview.toLowerCase().contains(query.toLowerCase()));
 
         return ListView(
-          children: results.map(card).toList(),
+          children: results.map((m) => MovieSummary(m)).toList(),
         );
       },
     );

@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
           stream: widget.bloc.movies,
           initialData: UnmodifiableListView<Movie>([]),
           builder: ((context, snapshot) => ListView(
-                children: snapshot.data.map(card).toList(),
+                children: snapshot.data.map((m) => MovieSummary(m)).toList(),
               )),
         ),
         bottomNavigationBar: BottomNavigationBar(
