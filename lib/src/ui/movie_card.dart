@@ -15,8 +15,6 @@ class MovieSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     final movieThumbnail = Container(
       margin: EdgeInsets.symmetric(vertical: 16.0),
       alignment:
@@ -31,30 +29,55 @@ class MovieSummary extends StatelessWidget {
       ),
     );
 
+    Widget _movieValues({String value, IconData icon}) {
+      return new Container(
+        child: new Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          IconButton(
+            icon: Icon(icon),
+            onPressed: null,
+          ),
+          new Container(width: 8.0),
+          new Text(value, style: Style.smallTextStyle),
+        ]),
+      );
+    }
+
     final movieCardContent = Container(
       margin: EdgeInsets.fromLTRB(
           horizontal ? 76.0 : 16.0, horizontal ? 16.0 : 42.0, 16.0, 16.0),
       constraints: BoxConstraints.expand(height: 200.0),
       child: Column(
-        crossAxisAlignment:
-            horizontal ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(height: 4.0),
-          Text(movie.title, style: Style.titleTextStyle),
-          Container(height: 10.0),
-          Container(
-//          padding: EdgeInsets.only(bottom: 2.0),
-            child: Text(
-              movie.overview,
-              style: Style.commonTextStyle,
+          crossAxisAlignment:
+              horizontal ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(height: 4.0),
+            Text(
+              movie.title,
+              style: Style.titleTextStyle,
               overflow: TextOverflow.ellipsis,
               softWrap: false,
               maxLines: 1,
             ),
-          ),
-          Separator()
-        ],
-      ),
+            Container(height: 10.0),
+            Container(
+//          padding: EdgeInsets.only(bottom: 2.0),
+              child: Text(
+                movie.overview,
+                style: Style.commonTextStyle,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+                maxLines: 1,
+              ),
+            ),
+            Separator(),
+            SingleChildScrollView(
+              child: Wrap(
+                  spacing: 4.0,
+                  runSpacing: 4.0,
+                  children: List.generate(movie.autores.length,
+                      (i) => _ActorListItem(movie.autores[i])).toList()),
+            )
+          ]),
     );
 
     final movieCard = Container(
@@ -78,25 +101,43 @@ class MovieSummary extends StatelessWidget {
     );
 
     return GestureDetector(
-        onTap: horizontal
-            ? () => Navigator.of(context).push(
-                  new PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => DetailPage(movie),
-                    transitionsBuilder: (context, animation, secondaryAnimation,
-                            child) =>
-                        new FadeTransition(opacity: animation, child: child),
-                  ),
-                )
-            : null,
-        child:  Container(
-            margin: const EdgeInsets.symmetric(
-              vertical: 16.0,
-              horizontal: 24.0,
-            ),
-            child: Stack(
-              children: <Widget>[movieCard, movieThumbnail],
-            ),
-          ),
-        );
+      onTap: horizontal
+          ? () => Navigator.of(context).push(
+                new PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => DetailPage(movie),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) =>
+                          new FadeTransition(opacity: animation, child: child),
+                ),
+              )
+          : null,
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+          vertical: 20.0,
+          horizontal: 24.0,
+        ),
+        child: Stack(
+          children: <Widget>[movieCard, movieThumbnail],
+        ),
+      ),
+    );
+  }
+}
+
+class _ActorListItem extends StatelessWidget {
+  _ActorListItem(this.nombre);
+
+  final String nombre;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      nombre,
+      style: Style.smallTextStyle,
+      overflow: TextOverflow.ellipsis,
+      softWrap: false,
+      maxLines: 1,
+//      textAlign: TextAlign.center,
+    );
   }
 }

@@ -12,6 +12,8 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('movie info ${movie.releaseDate}');
+
     return Scaffold(
       body: Container(
         constraints: BoxConstraints.expand(),
@@ -31,7 +33,7 @@ class DetailPage extends StatelessWidget {
   Container _getBackground() {
     return Container(
       child: Image(
-        image: CachedNetworkImageProvider(movie.posterImageUrl),
+        image: CachedNetworkImageProvider(movie.backdrop),
         fit: BoxFit.cover,
         height: 300.0,
       ),

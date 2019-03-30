@@ -1,5 +1,5 @@
-
 import 'dart:convert';
+import 'package:date_format/date_format.dart';
 
 class Movie {
   int id;
@@ -18,6 +18,12 @@ class Movie {
 
   String posterImageUrl;
 
+  String backdrop;
+
+  DateTime releaseDate;
+
+  List<String> autores = ['Oscar', 'Karvin', 'Miguel', 'Omar'];
+
   bool favorite;
 
   Movie.fromJson(Map<String, dynamic> json)
@@ -27,7 +33,13 @@ class Movie {
         status = json['status'],
         tagline = json['tagLine'],
         posterImageUrl =
-            'http://image.tmdb.org/t/p/w400/' + json['poster_path'];
+            'http://image.tmdb.org/t/p/w400/' + json['poster_path'],
+        releaseDate = DateTime.parse(json['release_date']),
+        backdrop = 'http://image.tmdb.org/t/p/w400/' + json['backdrop_path'];
+
+  String get releaseDateFormatted {
+    return formatDate(releaseDate, [dd, '-', mm, '-', yyyy]);
+  }
 }
 
 List<Movie> parseMovies(String jsonStr) {
@@ -37,12 +49,9 @@ List<Movie> parseMovies(String jsonStr) {
   List resultados = array['results'];
 
   for (var i = 0; i < resultados.length; i++) {
+    print('${resultados[i]}');
     movies.add(Movie.fromJson(resultados[i]));
   }
 
-
-
   return movies;
 }
-
-
