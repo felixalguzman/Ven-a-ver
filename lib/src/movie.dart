@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:date_format/date_format.dart';
+import 'package:ven_a_ver/src/genres.dart';
 
 class Movie {
   int id;
@@ -24,6 +25,8 @@ class Movie {
 
   List<String> autores = ['Oscar', 'Karvin', 'Miguel', 'Omar'];
 
+  List<Genres> genres;
+
   bool favorite;
 
   Movie.fromJson(Map<String, dynamic> json)
@@ -35,6 +38,7 @@ class Movie {
         posterImageUrl =
             'http://image.tmdb.org/t/p/w400/' + json['poster_path'],
         releaseDate = DateTime.parse(json['release_date']),
+        genres = parseGenres(json['genre_ids']),
         backdrop = 'http://image.tmdb.org/t/p/w400/' + json['backdrop_path'];
 
   String get releaseDateFormatted {

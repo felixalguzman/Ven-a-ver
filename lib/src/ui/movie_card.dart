@@ -74,8 +74,11 @@ class MovieSummary extends StatelessWidget {
               child: Wrap(
                   spacing: 4.0,
                   runSpacing: 4.0,
-                  children: List.generate(movie.autores.length,
-                      (i) => _ActorListItem(movie.autores[i])).toList()),
+                  children: horizontal
+                      ? List.generate(movie.genres.length,
+                          (i) => ItemList(movie.genres[i].name)).toList()
+                      : List.generate(movie.autores.length,
+                          (i) => ItemList(movie.autores[i])).toList()),
             )
           ]),
     );
@@ -124,8 +127,8 @@ class MovieSummary extends StatelessWidget {
   }
 }
 
-class _ActorListItem extends StatelessWidget {
-  _ActorListItem(this.nombre);
+class ItemList extends StatelessWidget {
+  ItemList(this.nombre);
 
   final String nombre;
 
