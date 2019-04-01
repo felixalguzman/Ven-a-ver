@@ -53,7 +53,7 @@ List<Movie> parseMovies(String jsonStr) {
   List resultados = array['results'];
 
   for (var i = 0; i < resultados.length; i++) {
-    print('${resultados[i]}');
+//    print('${resultados[i]}');
     movies.add(Movie.fromJson(resultados[i]));
   }
 

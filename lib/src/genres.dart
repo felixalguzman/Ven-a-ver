@@ -94,16 +94,16 @@ List<Genres> parseGenres(var jsonStr) {
   List<Genres> genres = [];
 
 //  var resultados = jsonDecode(jsonStr);
-  print('res: $jsonStr');
+//  print('res: $jsonStr');
 
   var generos = jsonDecode(Genres.generos);
   var salida = generos['genres'];
 
   for (var i = 0; i < salida.length; i++) {
     for (var j = 0; j < jsonStr.length; j++) {
-      print('ids: ${salida[i]['id']}');
+//      print('ids: ${salida[i]['id']}');
       if (salida[i]['id'] == jsonStr[j]) {
-        print('genero: ${salida[i]}');
+//        print('genero: ${salida[i]}');
         genres.add(Genres.fromJson(salida[i]));
       }
     }

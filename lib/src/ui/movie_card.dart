@@ -31,7 +31,7 @@ class MovieSummary extends StatelessWidget {
 
     final movieCardContent = Container(
       margin: EdgeInsets.fromLTRB(
-          horizontal ? 76.0 : 16.0, horizontal ? 16.0 : 42.0, 16.0, 16.0),
+          horizontal ? 76.0 : 16.0, horizontal ? 16.0 : 42.0, 16.0, 20.0),
       constraints: BoxConstraints.expand(height: 200.0),
       child: Column(
           crossAxisAlignment:
@@ -57,22 +57,30 @@ class MovieSummary extends StatelessWidget {
               ),
             ),
             Separator(),
-            SingleChildScrollView(
-              child: Wrap(
-                  spacing: 4.0,
-                  runSpacing: 4.0,
-                  children: horizontal
-                      ? List.generate(movie.genres.length,
-                          (i) => ItemList(movie.genres[i].name)).toList()
-                      : List.generate(movie.autores.length,
-                          (i) => ItemList(movie.autores[i])).toList()),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: SizedBox(
+                    height: 18,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => ItemList(horizontal
+                            ? movie.genres[index].name
+                            : movie.autores[index]),
+                        itemCount: horizontal
+                            ? movie.genres.length
+                            : movie.autores.length),
+                  ),
+                ),
+                (horizontal ? Text('') : movieReleasedDate(movie))
+              ],
             )
           ]),
     );
 
     final movieCard = Container(
       child: movieCardContent,
-      height: horizontal ? 124.0 : 154.0,
+      height: horizontal ? 124.0 : 160.0,
       margin: horizontal
           ? new EdgeInsets.only(left: 46.0)
           : new EdgeInsets.only(top: 130.0),
@@ -102,8 +110,8 @@ class MovieSummary extends StatelessWidget {
               )
           : null,
       child: Container(
-        margin: const EdgeInsets.symmetric(
-          vertical: 20.0,
+        margin: EdgeInsets.symmetric(
+          vertical: horizontal ? 20.0 : 30.0,
           horizontal: 24.0,
         ),
         child: Stack(
@@ -121,13 +129,49 @@ class ItemList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      nombre,
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: <Widget>[
+          Text(
+            nombre,
+            style: Style.smallTextStyle,
+            overflow: TextOverflow.ellipsis,
+            softWrap: false,
+            maxLines: 1,
+//      textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget movieReleasedDate(Movie movie) {
+  return Row(
+    children: <Widget>[
+      Icon(Icons.date_range, color: Colors.white,),
+      Text(
+        movie.releaseDateFormatted,
+        style: Style.commonTextStyle,
+      )
+    ],
+  );
+}
+
+List<Widget> itemList(List<String> valores) {
+  List<Widget> items = [];
+
+  for (var i = 0; i < valores.length; i++) {
+    items.add(Text(
+      valores[i],
       style: Style.smallTextStyle,
       overflow: TextOverflow.ellipsis,
       softWrap: false,
       maxLines: 1,
 //      textAlign: TextAlign.center,
-    );
+    ));
   }
+
+  return items;
 }
