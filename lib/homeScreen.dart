@@ -56,14 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 icon: Icon(Icons.new_releases)),
             BottomNavigationBarItem(
-                title: Text('Favoritos'), icon: Icon(Icons.star)),
+                title: Text('Favoritos', style: TextStyle(color: Colors.black),), icon: Icon(Icons.star, color: _currentIndex == 1 ? Colors.orangeAccent : Colors.purpleAccent[800],)),
             BottomNavigationBarItem(
-                title: Text('Watchlist'), icon: Icon(Icons.archive))
+                title: Text('Watchlist', style: TextStyle(color: Colors.black)), icon: Icon(Icons.archive,color: _currentIndex == 2 ? Colors.blueAccent : Colors.purpleAccent[800]))
           ],
           onTap: (index) {
             if (index == 0) {
               widget.bloc.moviesType.add(TipoPelicula.estreno);
-            } else {
+            } else if (index == 0) {
               widget.bloc.moviesType.add(TipoPelicula.favoritos);
             }
 
