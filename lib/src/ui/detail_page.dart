@@ -12,7 +12,7 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('movie info ${movie.releaseDate}');
+    print('movie ${movie.title} date: ${movie.releaseDate} date formatted: ${movie.releaseDateFormatted}');
 
     return Scaffold(
       body: Container(

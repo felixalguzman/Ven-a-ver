@@ -45,8 +45,15 @@ class MovieSearch extends SearchDelegate<Movie> {
           ));
         }
 
-        var results = snapshot.data.where((a) =>
+        final results = snapshot.data.where((a) =>
             a.title.toLowerCase().contains(query.toLowerCase()) ||
+            a.releaseDateFormatted
+                .toLowerCase()
+                .contains(query.toLowerCase()) ||
+            a.autores
+                .any((a) => a.toLowerCase().contains(query.toLowerCase())) ||
+            a.genres.any(
+                (g) => g.name.toLowerCase().contains(query.toLowerCase())) ||
             a.overview.toLowerCase().contains(query.toLowerCase()));
 
         return ListView(
@@ -71,7 +78,9 @@ class MovieSearch extends SearchDelegate<Movie> {
 
         final results = snapshot.data.where((a) =>
             a.title.toLowerCase().contains(query.toLowerCase()) ||
-            a.releaseDateFormatted.toLowerCase().contains(query.toLowerCase()) ||
+            a.releaseDateFormatted
+                .toLowerCase()
+                .contains(query.toLowerCase()) ||
             a.autores
                 .any((a) => a.toLowerCase().contains(query.toLowerCase())) ||
             a.genres.any(
