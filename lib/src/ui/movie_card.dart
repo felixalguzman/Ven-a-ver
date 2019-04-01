@@ -29,19 +29,6 @@ class MovieSummary extends StatelessWidget {
       ),
     );
 
-    Widget _movieValues({String value, IconData icon}) {
-      return new Container(
-        child: new Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          IconButton(
-            icon: Icon(icon),
-            onPressed: null,
-          ),
-          new Container(width: 8.0),
-          new Text(value, style: Style.smallTextStyle),
-        ]),
-      );
-    }
-
     final movieCardContent = Container(
       margin: EdgeInsets.fromLTRB(
           horizontal ? 76.0 : 16.0, horizontal ? 16.0 : 42.0, 16.0, 16.0),

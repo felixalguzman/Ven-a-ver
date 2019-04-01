@@ -69,9 +69,10 @@ class MovieSearch extends SearchDelegate<Movie> {
           ));
         }
 
-
         final results = snapshot.data.where((a) =>
             a.title.toLowerCase().contains(query.toLowerCase()) ||
+            a.genres.any(
+                (g) => g.name.toLowerCase().contains(query.toLowerCase())) ||
             a.overview.toLowerCase().contains(query.toLowerCase()));
 
         return ListView(
