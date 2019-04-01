@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ven_a_ver/src/movie.dart';
 import 'package:ven_a_ver/src/ui/detail_page.dart';
 import 'package:ven_a_ver/src/ui/separator.dart';
 import 'package:ven_a_ver/src/ui/text_style.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
 
 class MovieSummary extends StatelessWidget {
   final Movie movie;
   final bool horizontal;
+  final MoviesBloc bloc;
 
-  MovieSummary(this.movie, {this.horizontal = true});
+  MovieSummary(this.movie, this.bloc, {this.horizontal = true});
 
-  MovieSummary.vertical(this.movie) : horizontal = false;
+  MovieSummary.vertical(this.movie, this.bloc) : horizontal = false;
 
   @override
   Widget build(BuildContext context) {
@@ -102,21 +105,41 @@ class MovieSummary extends StatelessWidget {
       onTap: horizontal
           ? () => Navigator.of(context).push(
                 new PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => DetailPage(movie),
+                  pageBuilder: (_, __, ___) => DetailPage(movie, bloc),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) =>
                           new FadeTransition(opacity: animation, child: child),
                 ),
               )
           : null,
-      child: Container(
-        margin: EdgeInsets.symmetric(
-          vertical: horizontal ? 20.0 : 30.0,
-          horizontal: 24.0,
+      child: Slidable(
+        delegate: SlidableDrawerDelegate(),
+        actionExtentRatio: 0.25,
+        child: Container(
+          margin: EdgeInsets.symmetric(
+            vertical: horizontal ? 20.0 : 30.0,
+            horizontal: 24.0,
+          ),
+          child: Stack(
+            children: <Widget>[movieCard, movieThumbnail],
+          ),
         ),
-        child: Stack(
-          children: <Widget>[movieCard, movieThumbnail],
-        ),
+        secondaryActions: <Widget>[
+          IconSlideAction(
+            caption: 'Favorite',
+            color: Colors.orangeAccent,
+            icon: movie.favorite ? Icons.star : Icons.star_border,
+            onTap: () => () {
+                  bloc.favoriteMovie.add(movie);
+                },
+          ),
+          IconSlideAction(
+            caption: 'Watchlist',
+            color: Colors.blueAccent,
+            icon: Icons.archive,
+            onTap: () => {},
+          )
+        ],
       ),
     );
   }
@@ -150,7 +173,10 @@ class ItemList extends StatelessWidget {
 Widget movieReleasedDate(Movie movie) {
   return Row(
     children: <Widget>[
-      Icon(Icons.date_range, color: Colors.white,),
+      Icon(
+        Icons.date_range,
+        color: Colors.white,
+      ),
       Text(
         movie.releaseDateFormatted,
         style: Style.commonTextStyle,

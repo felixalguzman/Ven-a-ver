@@ -28,6 +28,7 @@ class Movie {
   List<Genres> genres;
 
   bool favorite;
+  bool wishlist;
 
   Movie.fromJson(Map<String, dynamic> json)
       : title = json['title'],
@@ -39,6 +40,8 @@ class Movie {
             'http://image.tmdb.org/t/p/w400/' + json['poster_path'],
         releaseDate = DateTime.parse(json['release_date']),
         genres = parseGenres(json['genre_ids']),
+        wishlist = false,
+        favorite = false,
         backdrop = 'http://image.tmdb.org/t/p/w400/' + json['backdrop_path'];
 
   String get releaseDateFormatted {

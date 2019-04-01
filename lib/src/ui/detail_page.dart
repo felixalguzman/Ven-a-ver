@@ -4,15 +4,18 @@ import 'package:ven_a_ver/src/movie.dart';
 import 'package:ven_a_ver/src/ui/movie_card.dart';
 import 'package:ven_a_ver/src/ui/separator.dart';
 import 'package:ven_a_ver/src/ui/text_style.dart';
+import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
 
 class DetailPage extends StatelessWidget {
   final Movie movie;
+  final MoviesBloc bloc;
 
-  DetailPage(this.movie);
+  DetailPage(this.movie, this.bloc);
 
   @override
   Widget build(BuildContext context) {
-    print('movie ${movie.title} date: ${movie.releaseDate} date formatted: ${movie.releaseDateFormatted}');
+    print(
+        'movie ${movie.title} date: ${movie.releaseDate} date formatted: ${movie.releaseDateFormatted}');
 
     return Scaffold(
       body: Container(
@@ -64,6 +67,7 @@ class DetailPage extends StatelessWidget {
         children: <Widget>[
           MovieSummary(
             movie,
+            bloc,
             horizontal: false,
           ),
           Container(

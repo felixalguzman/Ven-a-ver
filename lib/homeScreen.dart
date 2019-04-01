@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () async {
                 showSearch(
                     context: context,
-                    delegate: MovieSearch(widget.bloc.movies));
+                    delegate: MovieSearch(widget.bloc.movies, widget.bloc));
               },
             )
           ],
@@ -42,7 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
           stream: widget.bloc.movies,
           initialData: UnmodifiableListView<Movie>([]),
           builder: ((context, snapshot) => ListView(
-                children: snapshot.data.map((m) => MovieSummary(m)).toList(),
+                children: snapshot.data
+                    .map((m) => MovieSummary(m, widget.bloc))
+                    .toList(),
               )),
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -54,7 +56,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 icon: Icon(Icons.new_releases)),
             BottomNavigationBarItem(
-                title: Text('Otros'), icon: Icon(Icons.movie))
+                title: Text('Favoritos'), icon: Icon(Icons.star)),
+            BottomNavigationBarItem(
+                title: Text('Watchlist'), icon: Icon(Icons.archive))
           ],
           onTap: (index) {
             if (index == 0) {

@@ -3,11 +3,13 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:ven_a_ver/src/movie.dart';
 import 'package:ven_a_ver/src/ui/movie_card.dart';
+import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
 
 class MovieSearch extends SearchDelegate<Movie> {
   final Stream<UnmodifiableListView<Movie>> movies;
+  final MoviesBloc bloc;
 
-  MovieSearch(this.movies);
+  MovieSearch(this.movies, this.bloc);
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -57,7 +59,7 @@ class MovieSearch extends SearchDelegate<Movie> {
             a.overview.toLowerCase().contains(query.toLowerCase()));
 
         return ListView(
-          children: results.map((m) => MovieSummary(m)).toList(),
+          children: results.map((m) => MovieSummary(m,bloc)).toList(),
         );
       },
     );
@@ -88,7 +90,7 @@ class MovieSearch extends SearchDelegate<Movie> {
             a.overview.toLowerCase().contains(query.toLowerCase()));
 
         return ListView(
-          children: results.map((m) => MovieSummary(m)).toList(),
+          children: results.map((m) => MovieSummary(m, bloc)).toList(),
         );
       },
     );
