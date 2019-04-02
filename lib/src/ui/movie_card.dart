@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ven_a_ver/src/movie.dart';
@@ -7,25 +9,46 @@ import 'package:ven_a_ver/src/ui/text_style.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
 
-class MovieSummary extends StatelessWidget {
+class MovieSummary extends StatefulWidget {
   final Movie movie;
   final bool horizontal;
   final MoviesBloc bloc;
 
-  MovieSummary(this.movie, this.bloc, {this.horizontal = true});
+  MovieSummary(this.movie, this.bloc, {Key key, this.horizontal = true});
 
   MovieSummary.vertical(this.movie, this.bloc) : horizontal = false;
+
+  @override
+  _MovieSummaryState createState() => _MovieSummaryState();
+}
+
+class _MovieSummaryState extends State<MovieSummary> {
+  bool favorite;
+  bool wishlist;
+  String title;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    favorite = widget.movie.favorite;
+    wishlist = widget.movie.wishlist;
+    title = widget.movie.title;
+    print('id: ${widget.movie.title}');
+  }
 
   @override
   Widget build(BuildContext context) {
     final movieThumbnail = Container(
       margin: EdgeInsets.symmetric(vertical: 16.0),
-      alignment:
-          horizontal ? FractionalOffset.centerLeft : FractionalOffset.center,
+      alignment: widget.horizontal
+          ? FractionalOffset.centerLeft
+          : FractionalOffset.center,
       child: Hero(
-        tag: "movie-hero-${movie.title}",
+        tag: "movie-hero-${widget.movie.title}",
         child: Image(
-          image: CachedNetworkImageProvider(movie.posterImageUrl),
+          image: CachedNetworkImageProvider(widget.movie.posterImageUrl),
           height: 150.0,
           width: 100.0,
         ),
@@ -33,16 +56,17 @@ class MovieSummary extends StatelessWidget {
     );
 
     final movieCardContent = Container(
-      margin: EdgeInsets.fromLTRB(
-          horizontal ? 76.0 : 16.0, horizontal ? 16.0 : 42.0, 16.0, 20.0),
+      margin: EdgeInsets.fromLTRB(widget.horizontal ? 76.0 : 16.0,
+          widget.horizontal ? 16.0 : 42.0, 16.0, 20.0),
       constraints: BoxConstraints.expand(height: 200.0),
       child: Column(
-          crossAxisAlignment:
-              horizontal ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          crossAxisAlignment: widget.horizontal
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
           children: <Widget>[
             Container(height: 4.0),
             Text(
-              movie.title,
+              widget.movie.title,
               style: Style.titleTextStyle,
               overflow: TextOverflow.ellipsis,
               softWrap: false,
@@ -52,7 +76,7 @@ class MovieSummary extends StatelessWidget {
             Container(
 //          padding: EdgeInsets.only(bottom: 2.0),
               child: Text(
-                movie.overview,
+                widget.movie.overview,
                 style: Style.commonTextStyle,
                 overflow: TextOverflow.ellipsis,
                 softWrap: false,
@@ -67,15 +91,16 @@ class MovieSummary extends StatelessWidget {
                     height: 18,
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => ItemList(horizontal
-                            ? movie.genres[index].name
-                            : movie.autores[index]),
-                        itemCount: horizontal
-                            ? movie.genres.length
-                            : movie.autores.length),
+                        itemBuilder: (context, index) => ItemList(
+                            widget.horizontal
+                                ? widget.movie.genres[index].name
+                                : widget.movie.autores[index]),
+                        itemCount: widget.horizontal
+                            ? widget.movie.genres.length
+                            : widget.movie.autores.length),
                   ),
                 ),
-                (horizontal ? Text('') : movieReleasedDate(movie))
+                (widget.horizontal ? Text('') : movieReleasedDate(widget.movie))
               ],
             )
           ]),
@@ -83,8 +108,8 @@ class MovieSummary extends StatelessWidget {
 
     final movieCard = Container(
       child: movieCardContent,
-      height: horizontal ? 124.0 : 160.0,
-      margin: horizontal
+      height: widget.horizontal ? 124.0 : 160.0,
+      margin: widget.horizontal
           ? new EdgeInsets.only(left: 46.0)
           : new EdgeInsets.only(top: 130.0),
       decoration: new BoxDecoration(
@@ -102,10 +127,11 @@ class MovieSummary extends StatelessWidget {
     );
 
     return GestureDetector(
-      onTap: horizontal
+      onTap: widget.horizontal
           ? () => Navigator.of(context).push(
                 new PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => DetailPage(movie, bloc),
+                  pageBuilder: (_, __, ___) =>
+                      DetailPage(widget.movie, widget.bloc),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) =>
                           new FadeTransition(opacity: animation, child: child),
@@ -117,7 +143,7 @@ class MovieSummary extends StatelessWidget {
         actionExtentRatio: 0.25,
         child: Container(
           margin: EdgeInsets.symmetric(
-            vertical: horizontal ? 20.0 : 30.0,
+            vertical: widget.horizontal ? 20.0 : 30.0,
             horizontal: 24.0,
           ),
           child: Stack(
@@ -125,19 +151,33 @@ class MovieSummary extends StatelessWidget {
           ),
         ),
         secondaryActions: <Widget>[
-          IconSlideAction(
-            caption: 'Favorite',
-            color: Colors.orangeAccent,
-            icon: movie.favorite ? Icons.star : Icons.star_border,
-            onTap: () => () {
-                  bloc.favoriteMovie.add(movie);
-                },
+          StreamBuilder<UnmodifiableListView<Movie>>(
+            stream: widget.bloc.movies,
+            builder: ((context, snapshot) => IconSlideAction(
+                  caption: favorite ? 'Unfavorite' : 'Favorite',
+                  color: Colors.orangeAccent,
+                  icon: favorite ? Icons.star : Icons.star_border,
+                  onTap: () {
+                    print('movie ${widget.movie.title}');
+                    widget.bloc.favoriteMovie.add(title);
+
+                    setState(() {
+                      favorite = !favorite;
+                    });
+                  },
+                )),
           ),
           IconSlideAction(
-            caption: 'Watchlist',
+            caption: wishlist ? 'Unwatchlist' : 'Watchlist',
             color: Colors.blueAccent,
-            icon: Icons.archive,
-            onTap: () => {},
+            icon: wishlist ? Icons.unarchive : Icons.archive,
+            onTap: () {
+              widget.bloc.wishlistMovie.add(title);
+
+              setState(() {
+                wishlist = !wishlist;
+              });
+            },
           )
         ],
       ),

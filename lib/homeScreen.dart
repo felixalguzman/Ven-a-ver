@@ -11,8 +11,6 @@ class HomeScreen extends StatefulWidget {
 
   HomeScreen({Key key, this.bloc}) : super(key: key);
 
-  // ExamplePage({ Key key }) : super(key: key);
-
   @override
   _HomeScreenState createState() => new _HomeScreenState();
 }
@@ -56,15 +54,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 icon: Icon(Icons.new_releases)),
             BottomNavigationBarItem(
-                title: Text('Favoritos', style: TextStyle(color: Colors.black),), icon: Icon(Icons.star, color: _currentIndex == 1 ? Colors.orangeAccent : Colors.purpleAccent[800],)),
+                title: Text('Favoritos', style: TextStyle(color: Colors.indigo[800]),), icon: Icon(Icons.star, color: _currentIndex == 1 ? Colors.orangeAccent : Colors.purpleAccent[800],)),
             BottomNavigationBarItem(
-                title: Text('Watchlist', style: TextStyle(color: Colors.black)), icon: Icon(Icons.archive,color: _currentIndex == 2 ? Colors.blueAccent : Colors.purpleAccent[800]))
+                title: Text('Watchlist', style: TextStyle(color: Colors.indigo[800])), icon: Icon(Icons.archive,color: _currentIndex == 2 ? Colors.blueAccent : Colors.purpleAccent[800]))
           ],
           onTap: (index) {
             if (index == 0) {
               widget.bloc.moviesType.add(TipoPelicula.estreno);
-            } else if (index == 0) {
+            } else if (index == 1) {
               widget.bloc.moviesType.add(TipoPelicula.favoritos);
+            }else if(index == 2){
+              widget.bloc.moviesType.add(TipoPelicula.wishlist);
+
             }
 
             setState(() {

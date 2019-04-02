@@ -16,7 +16,7 @@ class MovieApiError extends Error {
 }
 
 class MoviesBloc {
-  HashMap<int, Movie> _cachedMovies = HashMap<int, Movie>();
+  HashMap<String, Movie> _cachedMovies = HashMap<String, Movie>();
 
   Stream<UnmodifiableListView<Movie>> get movies => _moviesSubject.stream;
   final _moviesSubject = BehaviorSubject<UnmodifiableListView<Movie>>();
@@ -24,8 +24,11 @@ class MoviesBloc {
   Sink<TipoPelicula> get moviesType => _movieTypeController.sink;
   final _movieTypeController = StreamController<TipoPelicula>();
 
-  Sink<Movie> get favoriteMovie => _favoriteMovieController.sink;
-  final _favoriteMovieController = StreamController<Movie>();
+  Sink<String> get favoriteMovie => _favoriteMovieController.sink;
+  final _favoriteMovieController = StreamController<String>();
+
+  Sink<String> get wishlistMovie => _wishlistMovieController.sink;
+  final _wishlistMovieController = StreamController<String>();
 
   Stream<bool> get isLoading => _isLoadingSubject.stream;
   final _isLoadingSubject = BehaviorSubject<bool>();
@@ -33,63 +36,121 @@ class MoviesBloc {
   var _movies = <Movie>[];
 
   MoviesBloc() {
-    _getMoviesAndUpdate(TipoPelicula.estreno);
+    _getMoviesAndUpdate(1);
 
     _movieTypeController.stream.listen((moviesType) {
       if (moviesType == TipoPelicula.estreno) {
-        _getMoviesAndUpdate(moviesType);
+        _getMoviesAndUpdate(1);
       } else if (moviesType == TipoPelicula.favoritos) {
-        _getMoviesAndUpdate(moviesType);
+        _getMoviesAndUpdate(2);
+      } else if (moviesType == TipoPelicula.wishlist) {
+        _getMoviesAndUpdate(3);
       }
     });
 
-    _favoriteMovieController.stream.listen((movie) {
-      _markFavorite(movie);
+    _favoriteMovieController.stream.listen((title) {
+      _markFavorite(title);
     });
+
+    _wishlistMovieController.stream.listen((title) {
+      _markWishlist(title);
+    });
+
+
   }
 
-  _getMoviesAndUpdate(TipoPelicula tipo) {
-    if (tipo == TipoPelicula.estreno) {
+  _getMoviesAndUpdate(int x) {
+    if (x == 1) {
       _trendingMovies().then((_) {
         _moviesSubject.add(UnmodifiableListView(_movies));
       });
-    } else if (tipo == TipoPelicula.favoritos) {
+    } else if (x == 2) {
       _favoriteMovies().then((_) {
+        _moviesSubject.add(UnmodifiableListView(_movies));
+      });
+    } else if (x == 3) {
+      _wishlistMovies().then((_) {
         _moviesSubject.add(UnmodifiableListView(_movies));
       });
     }
   }
 
+  Future<Null> _markFavorite(String m) async {
+    _cachedMovies.forEach((k, v) {
+      var o = v;
 
+      print('fav id: $m otros: ${o.id}');
+      if (m.toLowerCase() == o.title.toLowerCase()) {
+//        print('fav movie: ${o.title}');
 
-  List<int> _ids = [550, 551, 552, 300];
-
-  Future<Null> _markFavorite(Movie m) async {
-    print('movie: ${m.title}');
-    _cachedMovies[m.id].favorite = true;
-
-//    _movies = movies;
+        o.favorite = !o.favorite;
+        _cachedMovies[k] = o;
+      }
+    });
   }
+
+  Future<Null> _markWishlist(String m) async {
+    _cachedMovies.forEach((k, v) {
+      var o = v;
+
+      print('fav id: $m otros: ${o.id}');
+      if (m.toLowerCase() == o.title.toLowerCase()) {
+//        print('fav movie: ${o.title}');
+
+        o.wishlist = !o.wishlist;
+        _cachedMovies[k] = o;
+      }
+    });
+  }
+
 
   Future<Null> _favoriteMovies() async {
     _isLoadingSubject.add(true);
 
-    List<Movie> favorites = [];
-    _cachedMovies.forEach((k, x) {
-      if (x.favorite) {
-        favorites.add(x);
+    List<Movie> favs = [];
+    _cachedMovies.forEach((k, v) {
+      if (v != null) {
+        if (v.favorite) {
+          print('movie  ${v.title}');
+
+          favs.add(v);
+        }
       }
     });
 
     _isLoadingSubject.add(false);
 
-    _movies = favorites;
+    _movies = favs;
+  }
+
+  Future<Null> _wishlistMovies() async {
+    _isLoadingSubject.add(true);
+
+    List<Movie> wish = [];
+    _cachedMovies.forEach((k, v) {
+      if (v != null) {
+        if (v.wishlist) {
+          print('movie  ${v.title}');
+
+          wish.add(v);
+        }
+      }
+    });
+
+    _isLoadingSubject.add(false);
+
+    _movies = wish;
   }
 
   Future<Null> _trendingMovies() async {
     var futureMovies = await _getMovies();
-    futureMovies.forEach((m) => _cachedMovies[m.id] = m);
-    _movies = futureMovies;
+    futureMovies.forEach((m) {
+      if (!_cachedMovies.containsKey(m.title)) {
+        _cachedMovies[m.title] = m;
+      }
+    });
+
+    _movies = _cachedMovies.values.toList();
   }
 
   void close() {
@@ -97,6 +158,7 @@ class MoviesBloc {
     _isLoadingSubject.close();
     _movieTypeController.close();
     _favoriteMovieController.close();
+    _wishlistMovieController.close();
   }
 
   Future<Movie> _getMovie(int id) async {
@@ -109,7 +171,7 @@ class MoviesBloc {
 
       if (movieRes.statusCode == 200) {
         Map json = jsonDecode(movieRes.body);
-        _cachedMovies[id] = Movie.fromJson(json);
+        _cachedMovies[Movie.fromJson(json).title] = Movie.fromJson(json);
         _isLoadingSubject.add(false);
       } else {
         throw MovieApiError("Movie $id no se pudo buscar");
@@ -136,4 +198,4 @@ class MoviesBloc {
   }
 }
 
-enum TipoPelicula { estreno, favoritos }
+enum TipoPelicula { estreno, favoritos, wishlist }
