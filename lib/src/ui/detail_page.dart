@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:ven_a_ver/src/movie.dart';
 import 'package:ven_a_ver/src/ui/movie_card.dart';
@@ -11,6 +12,19 @@ class DetailPage extends StatelessWidget {
   final MoviesBloc bloc;
 
   DetailPage(this.movie, this.bloc);
+
+  List<Widget> _buildCategoryChips(TextTheme textTheme) {
+    return movie.genres.map((genre) {
+      return Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: Chip(
+          label: Text(genre.name),
+          labelStyle: textTheme.caption,
+          backgroundColor: Colors.black12,
+        ),
+      );
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +39,7 @@ class DetailPage extends StatelessWidget {
           children: <Widget>[
             _getBackground(),
             _getGradient(),
-            _getContent(),
+            _getContent(context),
             _getToolbar(context),
           ],
         ),
@@ -59,8 +73,10 @@ class DetailPage extends StatelessWidget {
     );
   }
 
-  Container _getContent() {
-    final _overviewTitle = "Resumen".toUpperCase();
+  Container _getContent(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
+    final _resumenTitle = "Resumen".toUpperCase();
+    final _generoTitle = "Géneros".toUpperCase();
     return Container(
       child: ListView(
         padding: EdgeInsets.fromLTRB(0.0, 72.0, 0.0, 32.0),
@@ -72,11 +88,24 @@ class DetailPage extends StatelessWidget {
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 32.0),
+            child: Text(
+              _generoTitle,
+              style: Style.headerTextStyle,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 32.0),
+            child: Wrap(
+              children: _buildCategoryChips(textTheme),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 32.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  _overviewTitle,
+                  _resumenTitle,
                   style: Style.headerTextStyle,
                 ),
                 Separator(),
@@ -84,6 +113,25 @@ class DetailPage extends StatelessWidget {
               ],
             ),
           ),
+          Container(
+            child: IconButton(
+                icon: Icon(Icons.access_alarms),
+                onPressed: () {
+                  Flushbar(
+                    message:
+                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
+                    icon: Icon(
+                      Icons.info_outline,
+                      size: 28.0,
+                      color: Colors.white,
+                    ),
+                    aroundPadding: EdgeInsets.all(8),
+                    borderRadius: 8,
+                    duration: Duration(seconds: 3),
+                    leftBarIndicatorColor: Colors.indigo[800],
+                  )..show(context);
+                }),
+          )
         ],
       ),
     );

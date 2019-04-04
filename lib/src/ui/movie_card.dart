@@ -8,6 +8,7 @@ import 'package:ven_a_ver/src/ui/separator.dart';
 import 'package:ven_a_ver/src/ui/text_style.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
+import 'package:flushbar/flushbar.dart';
 
 class MovieSummary extends StatefulWidget {
   final Movie movie;
@@ -60,50 +61,51 @@ class _MovieSummaryState extends State<MovieSummary> {
           widget.horizontal ? 16.0 : 42.0, 16.0, 20.0),
       constraints: BoxConstraints.expand(height: 200.0),
       child: Column(
-          crossAxisAlignment: widget.horizontal
-              ? CrossAxisAlignment.start
-              : CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(height: 4.0),
-            Text(
-              widget.movie.title,
-              style: Style.titleTextStyle,
+        crossAxisAlignment: widget.horizontal
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(height: 4.0),
+          Text(
+            widget.movie.title,
+            style: Style.titleTextStyle,
+            overflow: TextOverflow.ellipsis,
+            softWrap: false,
+            maxLines: 1,
+          ),
+          Container(height: 10.0),
+          Container(
+//          padding: EdgeInsets.only(bottom: 2.0),
+            child: Text(
+              widget.movie.overview,
+              style: Style.commonTextStyle,
               overflow: TextOverflow.ellipsis,
               softWrap: false,
               maxLines: 1,
             ),
-            Container(height: 10.0),
-            Container(
-//          padding: EdgeInsets.only(bottom: 2.0),
-              child: Text(
-                widget.movie.overview,
-                style: Style.commonTextStyle,
-                overflow: TextOverflow.ellipsis,
-                softWrap: false,
-                maxLines: 1,
-              ),
-            ),
-            Separator(),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: SizedBox(
-                    height: 18,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => ItemList(
-                            widget.horizontal
-                                ? widget.movie.genres[index].name
-                                : widget.movie.autores[index]),
-                        itemCount: widget.horizontal
-                            ? widget.movie.genres.length
-                            : widget.movie.autores.length),
-                  ),
+          ),
+          Separator(),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: SizedBox(
+                  height: 18,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) => ItemList(
+                          widget.horizontal
+                              ? widget.movie.genres[index].name
+                              : widget.movie.autores[index]),
+                      itemCount: widget.horizontal
+                          ? widget.movie.genres.length
+                          : widget.movie.autores.length),
                 ),
-                (widget.horizontal ? Text('') : movieReleasedDate(widget.movie))
-              ],
-            )
-          ]),
+              ),
+              (widget.horizontal ? Text('') : movieReleasedDate(widget.movie))
+            ],
+          ),
+        ],
+      ),
     );
 
     final movieCard = Container(
