@@ -6,6 +6,7 @@ import 'package:ven_a_ver/src/ui/movie_card.dart';
 import 'package:ven_a_ver/src/ui/separator.dart';
 import 'package:ven_a_ver/src/ui/text_style.dart';
 import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
+import 'package:share/share.dart';
 
 class DetailPage extends StatelessWidget {
   final Movie movie;
@@ -86,6 +87,39 @@ class DetailPage extends StatelessWidget {
             bloc,
             horizontal: false,
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                child: IconButton(
+                    icon: Icon(Icons.access_alarms),
+                    onPressed: () {
+                      Flushbar(
+                        message:
+                            "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
+                        icon: Icon(
+                          Icons.info_outline,
+                          size: 28.0,
+                          color: Colors.white,
+                        ),
+                        aroundPadding: EdgeInsets.all(8),
+                        borderRadius: 8,
+                        duration: Duration(seconds: 3),
+                        leftBarIndicatorColor: Colors.indigo[800],
+                      )..show(context);
+                    }),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                child: IconButton(
+                    icon: Icon(Icons.share),
+                    onPressed: () {
+                      Share.share(movie.movieURL);
+                    }),
+              )
+            ],
+          ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 32.0),
             child: Text(
@@ -113,25 +147,6 @@ class DetailPage extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            child: IconButton(
-                icon: Icon(Icons.access_alarms),
-                onPressed: () {
-                  Flushbar(
-                    message:
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-                    icon: Icon(
-                      Icons.info_outline,
-                      size: 28.0,
-                      color: Colors.white,
-                    ),
-                    aroundPadding: EdgeInsets.all(8),
-                    borderRadius: 8,
-                    duration: Duration(seconds: 3),
-                    leftBarIndicatorColor: Colors.indigo[800],
-                  )..show(context);
-                }),
-          )
         ],
       ),
     );
