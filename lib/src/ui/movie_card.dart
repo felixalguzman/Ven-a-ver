@@ -8,7 +8,6 @@ import 'package:ven_a_ver/src/ui/separator.dart';
 import 'package:ven_a_ver/src/ui/text_style.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
-import 'package:flushbar/flushbar.dart';
 
 class MovieSummary extends StatefulWidget {
   final Movie movie;
@@ -30,7 +29,6 @@ class _MovieSummaryState extends State<MovieSummary> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     favorite = widget.movie.favorite;

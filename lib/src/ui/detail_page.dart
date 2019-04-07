@@ -3,6 +3,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:ven_a_ver/src/movie.dart';
 import 'package:ven_a_ver/src/ui/movie_card.dart';
+import 'package:ven_a_ver/src/ui/movie_theater.dart';
 import 'package:ven_a_ver/src/ui/separator.dart';
 import 'package:ven_a_ver/src/ui/text_style.dart';
 import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
@@ -14,13 +15,13 @@ class DetailPage extends StatelessWidget {
 
   DetailPage(this.movie, this.bloc);
 
-  List<Widget> _buildCategoryChips(TextTheme textTheme) {
+  List<Widget> _buildCategoryChips() {
     return movie.genres.map((genre) {
       return Padding(
         padding: const EdgeInsets.only(right: 8.0),
         child: Chip(
           label: Text(genre.name),
-          labelStyle: textTheme.caption,
+          labelStyle: TextStyle(color: Colors.indigo[800]),
           backgroundColor: Colors.black12,
         ),
       );
@@ -75,7 +76,6 @@ class DetailPage extends StatelessWidget {
   }
 
   Container _getContent(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
     final _resumenTitle = "Resumen".toUpperCase();
     final _generoTitle = "Géneros".toUpperCase();
     return Container(
@@ -93,32 +93,62 @@ class DetailPage extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: IconButton(
-                    icon: Icon(Icons.access_alarms),
+                    icon: Icon(
+                      Icons.access_alarms,
+                      color: Colors.yellow,
+                    ),
                     onPressed: () {
                       Flushbar(
+                        title: movie.title,
                         message:
-                            "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
+                            'Serás notificado de cualquier actualización sobre esta película.',
                         icon: Icon(
-                          Icons.info_outline,
+                          Icons.new_releases,
                           size: 28.0,
                           color: Colors.white,
                         ),
                         aroundPadding: EdgeInsets.all(8),
                         borderRadius: 8,
                         duration: Duration(seconds: 3),
-                        leftBarIndicatorColor: Colors.indigo[800],
+                        leftBarIndicatorColor: new Color(0xff00c6ff),
                       )..show(context);
                     }),
               ),
               Container(
+                  child: FlatButton.icon(
+                icon: Icon(
+                  Icons.movie,
+                  color: Colors.redAccent[200],
+                ),
+                label: Text(
+                  'Cartelera',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () => Navigator.of(context).push(
+                      new PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => TheaterPage(movie),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) =>
+                                new FadeTransition(
+                                    opacity: animation, child: child),
+                      ),
+                    ),
+              )),
+              Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: IconButton(
-                    icon: Icon(Icons.share),
+                    icon: Icon(
+                      Icons.share,
+                      color: Colors.white,
+                    ),
                     onPressed: () {
-                      Share.share(movie.movieURL);
+                      Share.share(movie.title + ' ' + movie.movieURL);
                     }),
               )
             ],
+          ),
+          SizedBox(
+            height: 2,
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 32.0),
@@ -130,8 +160,11 @@ class DetailPage extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 32.0),
             child: Wrap(
-              children: _buildCategoryChips(textTheme),
+              children: _buildCategoryChips(),
             ),
+          ),
+          SizedBox(
+            height: 20,
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 32.0),
