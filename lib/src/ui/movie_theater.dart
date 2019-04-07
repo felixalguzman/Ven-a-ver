@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:ven_a_ver/src/movie.dart';
 import 'package:ven_a_ver/src/ui/text_style.dart';
 import 'package:intl/intl.dart';
@@ -16,6 +17,7 @@ class TheaterPage extends StatefulWidget {
 
 class _TheaterPageState extends State<TheaterPage> {
   final List<String> titulos = ['Santiago', 'Santo Domingo'];
+  final _currentPageNotifier = ValueNotifier<int>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,19 @@ class _TheaterPageState extends State<TheaterPage> {
     print('current $_currentIndex');
 
     return Scaffold(
-      body: PageView.builder(
+      body: Column(
+        children: <Widget>[
+          Stack(children: <Widget>[_buildPageView(), _buildCircleIndicator()]),
+        ],
+      ),
+    );
+  }
+
+  _buildPageView() {
+    return Container(
+      // color: Colors.black87,
+      height: 853.2,
+      child: PageView.builder(
         itemBuilder: (context, index) {
           return Material(
             child: Container(
@@ -41,7 +55,25 @@ class _TheaterPageState extends State<TheaterPage> {
           );
         },
         itemCount: 2,
-      )
+        onPageChanged: (int index) {
+          _currentPageNotifier.value = index;
+        },
+      ),
+    );
+  }
+
+  _buildCircleIndicator() {
+    return Positioned(
+      left: 0.0,
+      right: 0.0,
+      bottom: 0.0,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: CirclePageIndicator(
+          itemCount: 2,
+          currentPageNotifier: _currentPageNotifier,
+        ),
+      ),
     );
   }
 
@@ -71,7 +103,7 @@ class _TheaterPageState extends State<TheaterPage> {
             itemBuilder: (context, index) {
               return _listTiles(context, index);
             },
-          )
+          ),
         ],
       ),
     );
