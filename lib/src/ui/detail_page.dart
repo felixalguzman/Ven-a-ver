@@ -107,7 +107,8 @@ class DetailPage extends StatelessWidget {
                           size: 28.0,
                           color: Colors.white,
                         ),
-                        aroundPadding: EdgeInsets.all(8),
+                        
+                        padding: EdgeInsets.all(8),
                         borderRadius: 8,
                         duration: Duration(seconds: 3),
                         leftBarIndicatorColor: new Color(0xff00c6ff),
@@ -115,7 +116,7 @@ class DetailPage extends StatelessWidget {
                     }),
               ),
               Container(
-                  child: FlatButton.icon(
+                  child: TextButton.icon(
                 icon: Icon(
                   Icons.movie,
                   color: Colors.redAccent[200],

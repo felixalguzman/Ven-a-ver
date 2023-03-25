@@ -167,7 +167,7 @@ class MoviesBloc {
 
       final movieUrl =
           'https://api.themoviedb.org/3/movie/$id?api_key=${TMDBConfig.apiKey}';
-      final movieRes = await http.get(movieUrl);
+      final movieRes = await http.get(Uri.parse(movieUrl));
 
       if (movieRes.statusCode == 200) {
         Map json = jsonDecode(movieRes.body);
@@ -186,7 +186,7 @@ class MoviesBloc {
 
     final movieUrl =
         'https://api.themoviedb.org/3/trending/movie/day?api_key=${TMDBConfig.apiKey}';
-    final movieRes = await http.get(movieUrl);
+    final movieRes = await http.get(Uri.parse(movieUrl));
 
     if (movieRes.statusCode == 200) {
       _isLoadingSubject.add(false);

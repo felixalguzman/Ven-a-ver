@@ -139,48 +139,49 @@ class _MovieSummaryState extends State<MovieSummary> {
               )
           : null,
       child: Slidable(
-        delegate: SlidableDrawerDelegate(),
-        actionExtentRatio: 0.25,
-        child: Container(
-          margin: EdgeInsets.symmetric(
-            vertical: widget.horizontal ? 20.0 : 30.0,
-            horizontal: 24.0,
+          // delegate: SlidableDrawerDelegate(),
+          // actionExtentRatio: 0.25,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: widget.horizontal ? 20.0 : 30.0,
+              horizontal: 24.0,
+            ),
+            child: Stack(
+              children: <Widget>[movieCard, movieThumbnail],
+            ),
           ),
-          child: Stack(
-            children: <Widget>[movieCard, movieThumbnail],
-          ),
-        ),
-        secondaryActions: <Widget>[
-          StreamBuilder<UnmodifiableListView<Movie>>(
-            stream: widget.bloc.movies,
-            builder: ((context, snapshot) => IconSlideAction(
-                  caption: favorite ? 'Unfavorite' : 'Favorite',
-                  color: Colors.orangeAccent,
-                  icon: favorite ? Icons.star : Icons.star_border,
-                  onTap: () {
-                    print('movie ${widget.movie.title}');
-                    widget.bloc.favoriteMovie.add(title);
+          endActionPane: ActionPane(
+            motion: const DrawerMotion(),
+            children: <Widget>[
+              StreamBuilder<UnmodifiableListView<Movie>>(
+                stream: widget.bloc.movies,
+                builder: ((context, snapshot) => SlidableAction(
+                      label: favorite ? 'Unfavorite' : 'Favorite',
+                      backgroundColor: Colors.orangeAccent,
+                      icon: favorite ? Icons.star : Icons.star_border,
+                      onPressed: (context) {
+                        print('movie ${widget.movie.title}');
+                        widget.bloc.favoriteMovie.add(title);
 
-                    setState(() {
-                      favorite = !favorite;
-                    });
-                  },
-                )),
-          ),
-          IconSlideAction(
-            caption: wishlist ? 'Unwatchlist' : 'Watchlist',
-            color: Colors.blueAccent,
-            icon: wishlist ? Icons.unarchive : Icons.archive,
-            onTap: () {
-              widget.bloc.wishlistMovie.add(title);
-
-              setState(() {
-                wishlist = !wishlist;
-              });
-            },
-          )
-        ],
-      ),
+                        setState(() {
+                          favorite = !favorite;
+                        });
+                      },
+                    )),
+              ),
+              SlidableAction(
+                label: wishlist ? 'Unwatchlist' : 'Watchlist',
+                backgroundColor: Colors.blueAccent,
+                icon: wishlist ? Icons.unarchive : Icons.archive,
+                onPressed: (context) {
+                  widget.bloc.wishlistMovie.add(title);
+                  setState(() {
+                    wishlist = !wishlist;
+                  });
+                },
+              )
+            ],
+          )),
     );
   }
 }

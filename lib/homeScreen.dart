@@ -49,17 +49,17 @@ class _HomeScreenState extends State<HomeScreen> {
           currentIndex: _currentIndex,
           items: [
             BottomNavigationBarItem(
-                title: Text(
+                label:
                   'Populares',
-                ),
+                
                 icon: Icon(Icons.new_releases)),
             BottomNavigationBarItem(
-                title: Text(
+                label: 
                   'Favoritos',
-                  style: _currentIndex == 1
-                      ? TextStyle(color: Colors.indigo[800])
-                      : TextStyle(color: Colors.grey),
-                ),
+                  // style: _currentIndex == 1
+                  //     ? TextStyle(color: Colors.indigo[800])
+                  //     : TextStyle(color: Colors.grey),
+                
                 icon: Icon(
                   Icons.star,
                   color: _currentIndex == 1
@@ -67,10 +67,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       : Colors.purpleAccent[800],
                 )),
             BottomNavigationBarItem(
-                title: Text('Watchlist',
-                    style: _currentIndex == 2
-                        ? TextStyle(color: Colors.indigo[800])
-                        : TextStyle(color: Colors.grey)),
+                label: 'Watchlist',
+                    // style: _currentIndex == 2
+                    //     ? TextStyle(color: Colors.indigo[800])
+                    //     : TextStyle(color: Colors.grey)),
                 icon: Icon(Icons.archive,
                     color: _currentIndex == 2
                         ? Colors.blueAccent
