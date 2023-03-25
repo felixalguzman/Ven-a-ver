@@ -3,19 +3,19 @@ import 'package:date_format/date_format.dart';
 import 'package:ven_a_ver/src/genres.dart';
 
 class Movie {
-  int id;
+  int? id;
 
-  String title;
+  String? title;
 
 //  BuiltList<String> get genres;
 
-  String overview;
+  String? overview;
 
-  int runtime;
+  int? runtime;
 
-  String status;
+  String? status;
 
-  String tagline;
+  String? tagline;
 
   String posterImageUrl;
 

@@ -12,9 +12,9 @@ import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
 class MovieSummary extends StatefulWidget {
   final Movie movie;
   final bool horizontal;
-  final MoviesBloc bloc;
+  final MoviesBloc? bloc;
 
-  MovieSummary(this.movie, this.bloc, {Key key, this.horizontal = true});
+  MovieSummary(this.movie, this.bloc, {Key? key, this.horizontal = true});
 
   MovieSummary.vertical(this.movie, this.bloc) : horizontal = false;
 
@@ -23,9 +23,9 @@ class MovieSummary extends StatefulWidget {
 }
 
 class _MovieSummaryState extends State<MovieSummary> {
-  bool favorite;
-  bool wishlist;
-  String title;
+  late bool favorite;
+  late bool wishlist;
+  String? title;
 
   @override
   void initState() {
@@ -65,7 +65,7 @@ class _MovieSummaryState extends State<MovieSummary> {
         children: <Widget>[
           Container(height: 4.0),
           Text(
-            widget.movie.title,
+            widget.movie.title!,
             style: Style.titleTextStyle,
             overflow: TextOverflow.ellipsis,
             softWrap: false,
@@ -75,7 +75,7 @@ class _MovieSummaryState extends State<MovieSummary> {
           Container(
 //          padding: EdgeInsets.only(bottom: 2.0),
             child: Text(
-              widget.movie.overview,
+              widget.movie.overview!,
               style: Style.commonTextStyle,
               overflow: TextOverflow.ellipsis,
               softWrap: false,
@@ -154,14 +154,14 @@ class _MovieSummaryState extends State<MovieSummary> {
             motion: const DrawerMotion(),
             children: <Widget>[
               StreamBuilder<UnmodifiableListView<Movie>>(
-                stream: widget.bloc.movies,
+                stream: widget.bloc!.movies,
                 builder: ((context, snapshot) => SlidableAction(
                       label: favorite ? 'Unfavorite' : 'Favorite',
                       backgroundColor: Colors.orangeAccent,
                       icon: favorite ? Icons.star : Icons.star_border,
                       onPressed: (context) {
                         print('movie ${widget.movie.title}');
-                        widget.bloc.favoriteMovie.add(title);
+                        widget.bloc!.favoriteMovie.add(title);
 
                         setState(() {
                           favorite = !favorite;
@@ -174,7 +174,7 @@ class _MovieSummaryState extends State<MovieSummary> {
                 backgroundColor: Colors.blueAccent,
                 icon: wishlist ? Icons.unarchive : Icons.archive,
                 onPressed: (context) {
-                  widget.bloc.wishlistMovie.add(title);
+                  widget.bloc!.wishlistMovie.add(title);
                   setState(() {
                     wishlist = !wishlist;
                   });
@@ -189,7 +189,7 @@ class _MovieSummaryState extends State<MovieSummary> {
 class ItemList extends StatelessWidget {
   ItemList(this.nombre);
 
-  final String nombre;
+  final String? nombre;
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +198,7 @@ class ItemList extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Text(
-            nombre,
+            nombre!,
             style: Style.smallTextStyle,
             overflow: TextOverflow.ellipsis,
             softWrap: false,

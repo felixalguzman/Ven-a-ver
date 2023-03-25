@@ -12,10 +12,10 @@ void main() {
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
 
-  final MoviesBloc bloc;
+  final MoviesBloc? bloc;
 
   MyApp({
-    Key key,
+    Key? key,
     this.bloc,
   }) : super(key: key);
 

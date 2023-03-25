@@ -5,9 +5,9 @@ import 'package:ven_a_ver/src/movie.dart';
 import 'package:ven_a_ver/src/ui/movie_card.dart';
 import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
 
-class MovieSearch extends SearchDelegate<Movie> {
+class MovieSearch extends SearchDelegate<Movie?> {
   final Stream<UnmodifiableListView<Movie>> movies;
-  final MoviesBloc bloc;
+  final MoviesBloc? bloc;
 
   MovieSearch(this.movies, this.bloc);
 
@@ -47,16 +47,16 @@ class MovieSearch extends SearchDelegate<Movie> {
           ));
         }
 
-        final results = snapshot.data.where((a) =>
-            a.title.toLowerCase().contains(query.toLowerCase()) ||
+        final results = snapshot.data!.where((a) =>
+            a.title!.toLowerCase().contains(query.toLowerCase()) ||
             a.releaseDateFormatted
                 .toLowerCase()
                 .contains(query.toLowerCase()) ||
             a.autores
                 .any((a) => a.toLowerCase().contains(query.toLowerCase())) ||
             a.genres.any(
-                (g) => g.name.toLowerCase().contains(query.toLowerCase())) ||
-            a.overview.toLowerCase().contains(query.toLowerCase()));
+                (g) => g.name!.toLowerCase().contains(query.toLowerCase())) ||
+            a.overview!.toLowerCase().contains(query.toLowerCase()));
 
         return ListView(
           children: results.map((m) => MovieSummary(m,bloc)).toList(),
@@ -78,16 +78,16 @@ class MovieSearch extends SearchDelegate<Movie> {
           ));
         }
 
-        final results = snapshot.data.where((a) =>
-            a.title.toLowerCase().contains(query.toLowerCase()) ||
+        final results = snapshot.data!.where((a) =>
+            a.title!.toLowerCase().contains(query.toLowerCase()) ||
             a.releaseDateFormatted
                 .toLowerCase()
                 .contains(query.toLowerCase()) ||
             a.autores
                 .any((a) => a.toLowerCase().contains(query.toLowerCase())) ||
             a.genres.any(
-                (g) => g.name.toLowerCase().contains(query.toLowerCase())) ||
-            a.overview.toLowerCase().contains(query.toLowerCase()));
+                (g) => g.name!.toLowerCase().contains(query.toLowerCase())) ||
+            a.overview!.toLowerCase().contains(query.toLowerCase()));
 
         return ListView(
           children: results.map((m) => MovieSummary(m, bloc)).toList(),

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 class Genres {
-  int id;
-  String name;
+  int? id;
+  String? name;
 
   Genres.fromJson(Map<String, dynamic> json)
       : id = json['id'],

@@ -150,7 +150,7 @@ class _DetailedInfo extends StatelessWidget {
 
     final content = [
       Text(
-        movie.title,
+        movie.title!,
         style: const TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 14.0,
@@ -182,11 +182,11 @@ class _DetailedInfo extends StatelessWidget {
 }
 
 class _DateInfo extends StatelessWidget {
-  final Movie movie;
-  final int num;
+  final Movie? movie;
+  final int? num;
   static final dateFormat = DateFormat('E');
 
-  _DateInfo({Key key, this.movie, this.num}) : super(key: key);
+  _DateInfo({Key? key, this.movie, this.num}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +194,7 @@ class _DateInfo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Text(
-          dateFormat.format(movie.releaseDate),
+          dateFormat.format(movie!.releaseDate),
           style: TextStyle(
             // fontSize: 12.0,
             fontWeight: FontWeight.w500,
@@ -203,7 +203,7 @@ class _DateInfo extends StatelessWidget {
         ),
         const SizedBox(height: 4.0),
         Text(
-          movie.releaseDate.day.toString(),
+          movie!.releaseDate.day.toString(),
           style: const TextStyle(
             fontSize: 14.0,
             color: const Color(0xFF717DAD),

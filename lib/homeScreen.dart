@@ -7,9 +7,9 @@ import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
 import 'package:ven_a_ver/src/widgets/search.dart';
 
 class HomeScreen extends StatefulWidget {
-  final MoviesBloc bloc;
+  final MoviesBloc? bloc;
 
-  HomeScreen({Key key, this.bloc}) : super(key: key);
+  HomeScreen({Key? key, this.bloc}) : super(key: key);
 
   @override
   _HomeScreenState createState() => new _HomeScreenState();
@@ -30,17 +30,17 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () async {
                 showSearch(
                     context: context,
-                    delegate: MovieSearch(widget.bloc.movies, widget.bloc));
+                    delegate: MovieSearch(widget.bloc!.movies, widget.bloc));
               },
             )
           ],
-          leading: LoadingInfo(widget.bloc.isLoading),
+          leading: LoadingInfo(widget.bloc!.isLoading),
         ),
         body: StreamBuilder<UnmodifiableListView<Movie>>(
-          stream: widget.bloc.movies,
+          stream: widget.bloc!.movies,
           initialData: UnmodifiableListView<Movie>([]),
           builder: ((context, snapshot) => ListView(
-                children: snapshot.data
+                children: snapshot.data!
                     .map((m) => MovieSummary(m, widget.bloc))
                     .toList(),
               )),
@@ -78,11 +78,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
           onTap: (index) {
             if (index == 0) {
-              widget.bloc.moviesType.add(TipoPelicula.estreno);
+              widget.bloc!.moviesType.add(TipoPelicula.estreno);
             } else if (index == 1) {
-              widget.bloc.moviesType.add(TipoPelicula.favoritos);
+              widget.bloc!.moviesType.add(TipoPelicula.favoritos);
             } else if (index == 2) {
-              widget.bloc.moviesType.add(TipoPelicula.wishlist);
+              widget.bloc!.moviesType.add(TipoPelicula.wishlist);
             }
 
             setState(() {

@@ -16,7 +16,7 @@ class MovieApiError extends Error {
 }
 
 class MoviesBloc {
-  HashMap<String, Movie> _cachedMovies = HashMap<String, Movie>();
+  HashMap<String?, Movie> _cachedMovies = HashMap<String?, Movie>();
 
   Stream<UnmodifiableListView<Movie>> get movies => _moviesSubject.stream;
   final _moviesSubject = BehaviorSubject<UnmodifiableListView<Movie>>();
@@ -24,11 +24,11 @@ class MoviesBloc {
   Sink<TipoPelicula> get moviesType => _movieTypeController.sink;
   final _movieTypeController = StreamController<TipoPelicula>();
 
-  Sink<String> get favoriteMovie => _favoriteMovieController.sink;
-  final _favoriteMovieController = StreamController<String>();
+  Sink<String?> get favoriteMovie => _favoriteMovieController.sink;
+  final _favoriteMovieController = StreamController<String?>();
 
-  Sink<String> get wishlistMovie => _wishlistMovieController.sink;
-  final _wishlistMovieController = StreamController<String>();
+  Sink<String?> get wishlistMovie => _wishlistMovieController.sink;
+  final _wishlistMovieController = StreamController<String?>();
 
   Stream<bool> get isLoading => _isLoadingSubject.stream;
   final _isLoadingSubject = BehaviorSubject<bool>();
@@ -55,8 +55,6 @@ class MoviesBloc {
     _wishlistMovieController.stream.listen((title) {
       _markWishlist(title);
     });
-
-
   }
 
   _getMoviesAndUpdate(int x) {
@@ -75,12 +73,12 @@ class MoviesBloc {
     }
   }
 
-  Future<Null> _markFavorite(String m) async {
+  Future<Null> _markFavorite(String? m) async {
     _cachedMovies.forEach((k, v) {
       var o = v;
 
       print('fav id: $m otros: ${o.id}');
-      if (m.toLowerCase() == o.title.toLowerCase()) {
+      if (m!.toLowerCase() == o.title!.toLowerCase()) {
 //        print('fav movie: ${o.title}');
 
         o.favorite = !o.favorite;
@@ -89,12 +87,12 @@ class MoviesBloc {
     });
   }
 
-  Future<Null> _markWishlist(String m) async {
+  Future<Null> _markWishlist(String? m) async {
     _cachedMovies.forEach((k, v) {
       var o = v;
 
       print('fav id: $m otros: ${o.id}');
-      if (m.toLowerCase() == o.title.toLowerCase()) {
+      if (m!.toLowerCase() == o.title!.toLowerCase()) {
 //        print('fav movie: ${o.title}');
 
         o.wishlist = !o.wishlist;
@@ -102,7 +100,6 @@ class MoviesBloc {
       }
     });
   }
-
 
   Future<Null> _favoriteMovies() async {
     _isLoadingSubject.add(true);
@@ -161,7 +158,7 @@ class MoviesBloc {
     _wishlistMovieController.close();
   }
 
-  Future<Movie> _getMovie(int id) async {
+  Future<Movie?> _getMovie(int id) async {
     if (!_cachedMovies.containsKey(id)) {
       _isLoadingSubject.add(true);
 
@@ -171,14 +168,15 @@ class MoviesBloc {
 
       if (movieRes.statusCode == 200) {
         Map json = jsonDecode(movieRes.body);
-        _cachedMovies[Movie.fromJson(json).title] = Movie.fromJson(json);
+        _cachedMovies[Movie.fromJson(json as Map<String, dynamic>).title] =
+            Movie.fromJson(json);
         _isLoadingSubject.add(false);
       } else {
         throw MovieApiError("Movie $id no se pudo buscar");
       }
     }
 
-    return _cachedMovies[id];
+    return _cachedMovies[id.toString()];
   }
 
   Future<List<Movie>> _getMovies() async {

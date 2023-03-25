@@ -1,17 +1,17 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:ven_a_ver/src/movie.dart';
 import 'package:ven_a_ver/src/ui/movie_card.dart';
 import 'package:ven_a_ver/src/ui/movie_theater.dart';
 import 'package:ven_a_ver/src/ui/separator.dart';
 import 'package:ven_a_ver/src/ui/text_style.dart';
 import 'package:ven_a_ver/src/widgets/moviesBloc.dart';
-import 'package:share/share.dart';
 
 class DetailPage extends StatelessWidget {
   final Movie movie;
-  final MoviesBloc bloc;
+  final MoviesBloc? bloc;
 
   DetailPage(this.movie, this.bloc);
 
@@ -20,7 +20,7 @@ class DetailPage extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(right: 8.0),
         child: Chip(
-          label: Text(genre.name),
+          label: Text(genre.name!),
           labelStyle: TextStyle(color: Colors.indigo[800]),
           backgroundColor: Colors.black12,
         ),
@@ -109,7 +109,7 @@ class DetailPage extends StatelessWidget {
                         ),
                         
                         padding: EdgeInsets.all(8),
-                        borderRadius: 8,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
                         duration: Duration(seconds: 3),
                         leftBarIndicatorColor: new Color(0xff00c6ff),
                       )..show(context);
@@ -142,9 +142,7 @@ class DetailPage extends StatelessWidget {
                       Icons.share,
                       color: Colors.white,
                     ),
-                    onPressed: () {
-                      Share.share(movie.title + ' ' + movie.movieURL);
-                    }),
+                    onPressed: () => Share.share(movie.title! + ' ' + movie.movieURL)),
               )
             ],
           ),
@@ -177,7 +175,7 @@ class DetailPage extends StatelessWidget {
                   style: Style.headerTextStyle,
                 ),
                 Separator(),
-                Text(movie.overview, style: Style.commonTextStyle),
+                Text(movie.overview!, style: Style.commonTextStyle),
               ],
             ),
           ),
